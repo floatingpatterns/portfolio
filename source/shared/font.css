@@ -1,0 +1,2 @@
+/* Medeo Mono, вариативный (вес 100–900). Путь рассчитан на страницы в корне пакета. */
+@font-face{font-family:'Medeo Mono';src:url('../assets/fonts/MedeoMono-Variable.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}

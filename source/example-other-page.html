@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Пример другой страницы</title>
+<link rel="stylesheet" href="shared/font.css">
+<link rel="stylesheet" href="shared/tokens.css">
+<link rel="stylesheet" href="shared/pill.css">
+</head>
+<body data-pill="sub">
+<!-- Пилюля, вид sub (другие страницы). Вставить сразу после <body data-pill="sub"> -->
+<div class="pill-slot" id="pillSlot" aria-hidden="true"></div>
+<nav class="pill" id="pill" aria-label="Разделы">
+  <div class="v v-sub">
+    <div class="back-grp">
+      <a class="pb" href="./" aria-label="Назад"><img alt="" src="assets/pill/back.svg"></a>
+      <a class="mini" href="./" aria-label="На главную"><img alt="" src="assets/pill/head-mini.png"></a>
+    </div>
+    <a class="pb contact" href="https://t.me/floatingpatterns" aria-label="Написать мне" target="_blank" rel="noopener"><img alt="" src="assets/pill/voice-activate.svg"></a>
+  </div>
+</nav>
+
+<main class="page">
+  <h1 style="font-size:32.25px;line-height:58px;font-weight:600;text-transform:uppercase;margin:0">Другая страница</h1>
+  <p>Здесь живёт контент второй страницы. Пилюля (вид sub), шрифт, токены и плавный скролл подключены из папки shared.</p>
+  <p style="height:1400px">Прокрутите вниз: пилюля исчезнет. Наведите курсор на её место сверху: появится.</p>
+  <p>Конец страницы.</p>
+</main>
+<script src="shared/smooth-wheel.js"></script>
+<script src="shared/pill.js"></script>
+</body>
+</html>

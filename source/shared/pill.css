@@ -1,0 +1,21 @@
+/* nav pill */
+.pill,.pill-slot{position:fixed;top:calc(20px + env(safe-area-inset-top,0px));left:50%;width:min(498px,100% - 32px);transform:translate(-50%,0)}
+body[data-pill="sub"] .pill,body[data-pill="sub"] .pill-slot{width:min(628px,100% - 32px)}
+.pill{z-index:11;display:block;background:var(--bg);border:1px solid var(--ink);border-radius:999px;padding:1.84px;
+  transition:opacity .4s ease,width .2s ease}
+.pill-slot{height:36.35px;visibility:hidden;pointer-events:none}
+.pill.away:not(:focus-within){opacity:0;pointer-events:none;transition:opacity .08s linear,width .2s ease}
+.v{display:flex;align-items:center;justify-content:flex-end;gap:8px}
+.v-sub{display:none;justify-content:space-between;gap:0}
+body[data-pill="sub"] .v-main{display:none}
+body[data-pill="sub"] .v-sub{display:flex}
+.pb{width:30.67px;height:30.67px;border-radius:50%;display:grid;place-items:center;flex:none;transition:background-color .15s ease}
+.pb img{width:19.63px;height:19.63px;display:block;transition:filter .15s ease}
+.pb:hover,.pb:focus-visible{background:var(--ink)}
+.pb:hover img,.pb:focus-visible img{filter:invert(1)}
+.pb:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+.pb.contact img{transform:translate(-1.24px,-.61px)}
+.back-grp{display:flex;align-items:center;gap:2px}
+.mini{display:block;width:20.92px;height:27.67px}
+.mini img{display:block;width:100%;height:100%;object-fit:cover}
+@media (prefers-reduced-motion:reduce){.pill,.pb,.pb img{transition:none}}

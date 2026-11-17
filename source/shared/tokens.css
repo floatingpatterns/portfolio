@@ -1,0 +1,15 @@
+/* Токены и база страницы. Подключать на каждой странице. */
+:root{
+  --bg:#fffef7; --ink:#000511; --link:#0b3463; --ph:rgba(0,5,17,.35);
+  --mono:'Medeo Mono',ui-monospace,Menlo,monospace;
+  color-scheme:light; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--mono);font-weight:400;font-size:14px;line-height:20px}
+/* плашка под вырезом iPhone, чтобы контент не просвечивал под системной строкой */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+p{margin:0;text-wrap:pretty}
+/* колонка контента: 498 px по центру, блоки через 80 px */
+.page{width:min(498px,100% - 32px);margin:0 auto;padding:82px 0 80px;display:flex;flex-direction:column;gap:80px;position:relative}
