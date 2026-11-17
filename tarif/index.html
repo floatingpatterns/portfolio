@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Дизайн и запуск G2B «Тариф»</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: "Medeo Mono";
+      src: url("assets/fonts/MedeoMonoVariable.woff2") format("woff2");
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --bg-surface: #fffef7;
+      --ink: #000511;
+      --text: #000;
+      --link: #1565c0;
+      --font-main: "Medeo Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      --font-label: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      --s-m: 16px;
+      --s-l: 20px;
+      --s-xl: 28px;
+      --s-xxl: 40px;
+      --content: 628px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { scroll-padding-top: 80px; }
+
+    body {
+      margin: 0;
+      background: var(--bg-surface);
+      color: var(--text);
+      font-family: var(--font-main);
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 21px;
+      -webkit-font-smoothing: antialiased;
+      hanging-punctuation: first last; /* Safari; other browsers ignore it */
+      text-wrap: pretty;
+    }
+
+    .page {
+      width: 100%;
+      max-width: calc(var(--content) + 48px);
+      margin: 0 auto;
+      padding: 142px 24px 80px;
+    }
+
+    /* ---------- pill ---------- */
+    :root { --bg: #fffef7; --focus: #0b3463; }
+
+    .pill, .pill-slot {
+      position: fixed; top: calc(20px + env(safe-area-inset-top, 0px)); left: 50%;
+      width: min(498px, 100% - 32px); transform: translate(-50%, 0);
+    }
+    body[data-pill="sub"] .pill, body[data-pill="sub"] .pill-slot { width: min(628px, 100% - 32px); }
+
+    .pill {
+      z-index: 11; background: var(--bg); border: 1px solid var(--ink); border-radius: 999px; padding: 1.84px;
+      transition: opacity .4s ease, width .2s ease;                 /* appear */
+    }
+    .pill-slot { height: 36.35px; visibility: hidden; pointer-events: none; }
+    .pill.away:not(:focus-within) {
+      opacity: 0; pointer-events: none;
+      transition: opacity .08s linear, width .2s ease;              /* disappear */
+    }
+
+    .v { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+    .v-sub { display: none; justify-content: space-between; gap: 0; }
+    body[data-pill="sub"] .v-main { display: none; }
+    body[data-pill="sub"] .v-sub { display: flex; }
+    .back-grp { display: flex; align-items: center; gap: 2px; }
+    .mini { display: block; width: 20.92px; height: 27.67px; }
+    .mini img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+    .pb {
+      width: 30.67px; height: 30.67px; border-radius: 50%; display: grid; place-items: center; flex: none;
+      transition: background-color .15s ease;
+    }
+    button.pb { border: 0; padding: 0; background: none; color: inherit; }
+    .pb img { width: 19.63px; height: 19.63px; display: block; transition: filter .15s ease; }
+    .pb--back img { transform: rotate(-90deg) scaleX(-1); }
+    .pb:hover, .pb:focus-visible { background: var(--ink); }
+    .pb:hover img, .pb:focus-visible img { filter: invert(1); }
+    .pb:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+    @media (prefers-reduced-motion: reduce) { .pill, .pb, .pb img { transition: none; } }
+
+    /* ---------- typography ---------- */
+    h1, h2, h3, p, ul { margin: 0; }
+    h1 { font-size: 36px; font-weight: 500; line-height: normal; color: var(--ink); }
+    h2 {
+      font-size: 28px; font-weight: 500; line-height: normal;
+      letter-spacing: .56px; text-transform: uppercase; color: var(--ink);
+    }
+    h3 { font-size: 20px; font-weight: 600; line-height: normal; color: var(--ink); }
+
+    .text > * + * { margin-top: 13.71px; }
+    /* hanging lists: marker sits in the margin, text aligns with the paragraph edge */
+    .text ul { padding: 0; list-style: none; }
+    .text li { position: relative; }
+    .text li::before {
+      content: "•";
+      position: absolute;
+      left: -2ch;
+      width: 1ch;
+      text-align: center;
+    }
+    .text ul + p { margin-top: 13.71px; }
+
+    /* ---------- layout rhythm ---------- */
+    .case { display: flex; flex-direction: column; gap: 48px; }
+    .intro { display: flex; flex-direction: column; gap: 24px; }
+    .section { display: flex; flex-direction: column; gap: 12px; }
+    .research { display: flex; flex-direction: column; gap: var(--s-xl); }
+    .research__head { display: flex; flex-direction: column; gap: var(--s-m); }
+    .features { display: flex; flex-direction: column; gap: var(--s-xxl); }
+    .feature { display: flex; flex-direction: column; gap: var(--s-m); }
+    .stack { display: flex; flex-direction: column; gap: var(--s-xl); }
+    .unit { display: flex; flex-direction: column; gap: var(--s-l); }
+    .unit--tight { gap: var(--s-m); }
+
+    figure { margin: 0; }
+    /* thumbnail: full column width */
+    .shot { display: block; width: 100%; padding: 0; margin: 0; border: 0; background: none; color: inherit; }
+    .shot img { display: block; width: 100%; height: auto; }
+    .shot:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+
+    /* lightbox overlay: full screen, warm translucent blur, hidden by default */
+    #lb {
+      position: fixed; inset: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: center;
+      padding: 2vh 2vw;
+      background: rgba(240, 236, 224, .9);
+      -webkit-backdrop-filter: blur(14px) saturate(1.1);
+      backdrop-filter: blur(14px) saturate(1.1);
+      opacity: 0; visibility: hidden;
+      transition: opacity .2s, visibility .2s;
+    }
+    #lb.on { opacity: 1; visibility: visible; }
+    /* natural file size, shrinks to fit the screen; drop-shadow follows the PNG shape */
+    #lb img {
+      display: block; width: auto; height: auto;
+      max-width: 96vw; max-height: 94vh;
+      filter: drop-shadow(0 18px 36px rgba(0, 5, 17, .22)) drop-shadow(0 0 1px rgba(0, 5, 17, .3));
+      transform: scale(.97); transition: transform .2s;
+    }
+    #lb.on img { transform: none; }
+    body.lock { overflow: hidden; }
+
+    /* ---------- case description unit ---------- */
+    .meta {
+      display: grid;
+      grid-template-columns: 200px 224px;
+      column-gap: 0;
+      row-gap: 32px;
+      width: 424px;
+      max-width: 100%;
+    }
+    .meta__item { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; min-width: 0; }
+    .meta__icon {
+      display: flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px; margin-left: 2px; padding: 4px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='none' stroke='%23000511' stroke-width='2' stroke-dasharray='12 10' stroke-linecap='butt' stroke-linejoin='miter' stroke-miterlimit='7'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+    }
+    .meta__icon img { display: block; width: 32px; height: 32px; }
+    .meta__label {
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: 17px;
+      line-height: normal;
+      letter-spacing: .34px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      color: var(--ink);
+    }
+    a.meta__label { color: var(--link); text-decoration: none; }
+
+    @media (max-width: 480px) {
+      h1 { font-size: 28px; }
+      h2 { font-size: 22px; }
+      .page { padding-top: 104px; }
+      .meta { grid-template-columns: 1fr 1fr; width: 100%; }
+    }
+  </style>
+<link rel="stylesheet" href="../transition.css">
+<link rel="stylesheet" href="../cursors.css">
+<link rel="stylesheet" href="../footer.css">
+<link rel="stylesheet" href="../mobile.css">
+<script>(function(){var v="";try{v=sessionStorage.getItem("trFlag")||""}catch(e){}if(!v)v=window.name||"";var m=/^tr\|(\d+)\|(\d)/.exec(v);if(m&&Date.now()-m[1]<4000){var h=document.documentElement;h.classList.add("tr-enter");if(m[2]==="1")h.classList.add("tr-ph");setTimeout(function(){h.classList.remove("tr-enter","tr-ph")},3500)}})()</script>
+</head>
+<body data-pill="sub" data-tr="case">
+<div id="trCup" aria-hidden="true"><img alt="" src="../cursors/src/wait.svg"></div>
+  <div class="page">
+
+    <div class="pill-slot" id="pillSlot" aria-hidden="true"></div>
+    <nav class="pill" id="pill" aria-label="Навигация">
+      <div class="v v-sub">
+        <div class="back-grp">
+          <a class="pb pb--back" href="../" aria-label="Назад"><img alt="" src="assets/icons/succession.svg"></a>
+          <a class="mini" href="../" aria-label="На главную"><img alt="" src="assets/icons/portrait.svg"></a>
+        </div>
+        <button class="pb" type="button" aria-label="Озвучить страницу"><img alt="" src="assets/icons/voice-activate.svg"></button>
+      </div>
+    </nav>
+
+    <main class="case">
+
+      <header class="intro">
+        <h1>Дизайн и запуск G2B «Тариф»</h1>
+        <div class="meta">
+          <div class="meta__item">
+            <div class="meta__icon"><img src="assets/icons/events.svg" alt="" width="32" height="32"></div>
+            <a class="meta__label" href="https://www.mos.ru/depr/" target="_blank" rel="noopener">mos.ru</a>
+          </div>
+          <div class="meta__item">
+            <div class="meta__icon"><img src="assets/icons/user-role.svg" alt="" width="32" height="32"></div>
+            <p class="meta__label">design direction</p>
+          </div>
+          <div class="meta__item">
+            <div class="meta__icon"><img src="assets/icons/portfolio.svg" alt="" width="32" height="32"></div>
+            <a class="meta__label" href="https://www.croc.ru/" target="_blank" rel="noopener">croc inc</a>
+          </div>
+          <div class="meta__item">
+            <div class="meta__icon"><img src="assets/icons/calendar.svg" alt="" width="32" height="32"></div>
+            <p class="meta__label">2021–23</p>
+          </div>
+        </div>
+      </header>
+
+      <section class="section">
+        <h2>О чём это?</h2>
+        <div class="text">
+          <p>Регулируемый бизнес — это тот, который производит услуги коммунального назначения. Стоимость всех оказываемых услуг всех выражается в тарифе, который устанавливается государством.</p>
+          <p>Участники процесса: государственный регулятор и организацие. Среди последних есть как частные предприниматели, так и крупные национальные корпорации. Регулятор ежегодно проводит проверку их деятельности.</p>
+          <p>Для этого процесса используются:</p>
+          <ul>
+            <li>мониторинг реестров собственности;</li>
+            <li>анализ балансовых отчётов организаций;</li>
+            <li>изучение практики применения уже установленных тарифов;</li>
+            <li>подготовка предложений по новым тарифам.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Задача</h2>
+        <div class="text">
+          <p>Создать веб-интерфейс для контроля деятельности регулируемого бизнеса.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Челлендж</h2>
+        <div class="text">
+          <p>Я пришёл на проект как единственный дизайнер на ранней стадии разработки. У команды уже были сырые концепции дизайна и базовые продуктовые решения.</p>
+          <p>Я встроил дизайн коммуникацию в общий процесс и убедил клиента пересмотреть большинство первоначальных решений. В результате мы получили дополнительные ресурсы для проведения исследования и расширения команды дизайнеров.</p>
+        </div>
+      </section>
+
+      <section class="research">
+        <div class="research__head">
+          <h2>исследование</h2>
+          <div class="text">
+            <p>Исследование основано на 11 интервью. Респондентов предоставила команда клиента:</p>
+            <ul>
+              <li>Mos.ru, экономический департамент: 1 специалист, 1 ведущий менеджер</li>
+              <li>АО «Мосводоканал»: 2 специалиста, 1 ведущий менеджер</li>
+              <li>ООО «ГКР»: 2 специалиста</li>
+              <li>ОАО «РЖД»: 2 специалиста, 2 ведущих менеджера</li>
+            </ul>
+            <p>Примеры болей, выявленных в начале исследования:</p>
+          </div>
+        </div>
+        <button class="shot" type="button" aria-label="Открыть скриншот"><img src="assets/img/pains.png" width="1674" height="1369" loading="lazy" alt="Примеры болей участников процесса, выявленные в начале исследования"></button>
+        <div class="text">
+          <p>Выборка составлена из представителей крупных нацкорпораций, предприятий среднего бизнеса и экспертов государственного регулятора. Таким образом, удалось охватить проблемы на разных уровнях зрелости документооборота, затратив на исследование относительно небольшое количество времени.</p>
+          <p>Из-за специфики предметной области, конечный продукт не слишком чувствителен к демографическим данным и задумывался как безальтернативный инструмент для всех участников. Для исследования типичных операций и ролей был выбран подход JTBD: рассматривались только functional jobs. Несколько jobs stories:</p>
+        </div>
+        <button class="shot" type="button" aria-label="Открыть скриншот"><img src="assets/img/stories.png" width="1524" height="1428" loading="lazy" alt="Примеры jobs stories"></button>
+      </section>
+
+      <section class="features">
+
+        <div class="feature">
+          <h2>Основные возможности</h2>
+          <div class="feature">
+            <h3>Аккредитация</h3>
+            <div class="text">
+              <p>Перед подачей заявки организация должна быть аккредитована как регулируемый субъект. Для этого представитель должен убедиться в актуальности данных и дополнить при необходимости. Мы агрегируем большую часть сведений из открытых государственных реестров. Это позволило сократить процедуру прохождения аккредитации до нескольких простых шагов:</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="feature">
+          <h3>Тарифная заявка</h3>
+          <div class="stack">
+            <div class="unit unit--tight">
+              <div class="text"><p>Это ключевой элемент тарифной кампании. Организация подаёт разное количество заявок в зависимости от сфер деятельности и типов предоставляемых услуг.</p></div>
+              <button class="shot" type="button" aria-label="Открыть скриншот"><img src="assets/img/tarif-request.png" width="3308" height="996" loading="lazy" alt="Список тарифных заявок организации"></button>
+            </div>
+            <div class="unit">
+              <div class="text"><p>Статусная модель заявок определяет возможные действия через контекстное меню:</p></div>
+              <button class="shot" type="button" aria-label="Открыть скриншот"><img src="assets/img/request-statuses.png" width="2166" height="1356" loading="lazy" alt="Контекстное меню заявки со списком действий по статусам"></button>
+            </div>
+            <div class="unit">
+              <div class="text"><p>Боковая панель — это инструмент для общения регулятора и бизнеса.</p></div>
+              <button class="shot" type="button" aria-label="Открыть скриншот"><img src="assets/img/request-panel.png" width="2166" height="1356" loading="lazy" alt="Боковая панель заявки"></button>
+            </div>
+            <div class="unit">
+              <div class="text"><p>Жизненный цикл заявки целиком показан на боковой панели. Некоторые события играют роль ключевых этапов процесса, другие регулярно повторяются и обеспечивают обмен данными. Ниже краткий пример такого жизненного цикла:</p></div>
+              <button class="shot" type="button" aria-label="Открыть скриншот"><img src="assets/img/lifecycle.png" width="1589" height="3744" loading="lazy" alt="Пример жизненного цикла заявки на боковой панели"></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="feature">
+          <h3>Запросы</h3>
+          <div class="unit">
+            <div class="text">
+              <p>В ходе проверки регулятор запрашивает дополнительные данные. Обычно это техническая документация, сертификаты о состоянии оборудования, бухгалтерские отчёты и т. п.</p>
+              <p>Это отдельный процесс с гибкими правилами, который позволяет не застревать на старте тарифной кампании, собирая сразу весь массив данных.</p>
+            </div>
+            <button class="shot" type="button" aria-label="Открыть скриншот"><img src="assets/img/compose-request.png" width="1384" height="8000" loading="lazy" alt="Создание запроса регулятором: пошаговый сценарий"></button>
+          </div>
+        </div>
+
+        <div class="feature">
+          <h3>Документы</h3>
+          <div class="stack">
+            <div class="unit">
+              <div class="text">
+                <p>Вместе с командой клиента мы создали иерархию всех типов документов тарифных кампаний за три года. После этого упростили структуру до трёх уровней и интегрировали в хранилище документов.</p>
+                <p>Цель этого в том, чтобы создать системную конвенцию, понятную как государственному регулятору, так и регулируемому бизнесу. Таким образом, регулятор может управлять видимостью папок и определять необходимость в документах в зависимости от сферы деятельности.</p>
+                <p>Разные документы могут относиться к одной конкретной сфере деятельности. Каждый документ отправляется в ответ на запрос регулятора.</p>
+              </div>
+              <button class="shot" type="button" aria-label="Открыть скриншот"><img src="assets/img/docs-main.png" width="2381" height="1488" loading="lazy" alt="Иерархия типов документов в хранилище"></button>
+            </div>
+            <div class="unit">
+              <div class="text"><p>Каждый слот может включать несколько версий документа и позволяет открыть конкретный запрос:</p></div>
+              <button class="shot" type="button" aria-label="Открыть скриншот"><img src="assets/img/docs-request.png" width="2381" height="1488" loading="lazy" alt="Слот документа с несколькими версиями"></button>
+            </div>
+            <div class="unit">
+              <div class="text"><p>Саммари родительского запроса показывает все документы: уже отправленные или подготовленные для ответа.</p></div>
+              <button class="shot" type="button" aria-label="Открыть скриншот"><img src="assets/img/docs-version.png" width="2381" height="1488" loading="lazy" alt="Саммари родительского запроса со списком документов"></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="feature">
+          <h3>Профиль организации</h3>
+          <div class="stack">
+            <div class="unit">
+              <div class="text"><p>Вся информации и регулируемой организации: сферы деятельности, имущество, зона обслуживания и т. д. Это ключевые сведения, их наличие и корректность определяет результат рассмотрения заявки в ходе кампании</p></div>
+              <button class="shot" type="button" aria-label="Открыть скриншот"><img src="assets/img/profile.png" width="2381" height="1488" loading="lazy" alt="Профиль регулируемой организации"></button>
+            </div>
+            <div class="unit">
+              <div class="text"><p>Профиль организации, вид по умолчанию до и после аккредитации:</p></div>
+              <button class="shot" type="button" aria-label="Открыть скриншот"><img src="assets/img/org-data.png" width="1649" height="2787" loading="lazy" alt="Профиль организации до и после аккредитации"></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="feature">
+          <h3>Реестры собственности</h3>
+          <div class="stack">
+            <div class="unit">
+              <div class="text">
+                <p>Организация обязана предоставлять данные обо всех активах, участвующих в регулируемой деятельности: земельных участках, зданиях, оборудовании, транспорте и других. Эта информация хранится в профиле организации. Организация самостоятельно заполняет данные и предоставляет их по запросу регулятора.</p>
+                <p>Раньше типизация активов по каждой сфере деятельности была излишне фрагментирована, такой вид не годится для цифровых задач. Мы пересмотрели подход, один из примеров для водоснабжения:</p>
+              </div>
+              <button class="shot" type="button" aria-label="Открыть скриншот"><img src="assets/img/assets-structure.png" width="1517" height="794" loading="lazy" alt="Структура типов активов для водоснабжения"></button>
+            </div>
+            <div class="unit">
+              <div class="text"><p>Соотнесение ресурса по видами деятельности:</p></div>
+              <button class="shot" type="button" aria-label="Открыть скриншот"><img src="assets/img/registry-water.png" width="2387" height="1495" loading="lazy" alt="Соотнесение ресурса с видами деятельности"></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="feature">
+          <h3>Результаты</h3>
+          <div class="unit">
+            <div class="text"><p>Что изменилось для бизнеса и регулятора: динамика некоторых ключевых показателей</p></div>
+            <button class="shot" type="button" aria-label="Открыть скриншот"><img src="assets/img/results.png" width="1542" height="1271" loading="lazy" alt="Динамика ключевых показателей для бизнеса и регулятора"></button>
+          </div>
+        </div>
+
+      </section>
+    <footer class="cf-row" aria-label="Контакты">
+<a class="cf" href="https://t.me/floatingpatterns" target="_blank" rel="noopener"><svg role="img" aria-label="Telegram" class="cf-profile" width="88" height="88" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+<style>
+.cf-profile .cf-w{transform-box:view-box;transform-origin:35px 49.28px}
+.cf-profile:hover .cf-w1,:hover>.cf-profile .cf-w1{animation:cf-wave-in .5s cubic-bezier(.3,0,.2,1)}
+.cf-profile:hover .cf-w2,:hover>.cf-profile .cf-w2{animation:cf-wave-out .5s cubic-bezier(.3,0,.2,1)}
+@keyframes cf-wave-in{0%{transform:scale(1);opacity:1}40%{transform:scale(1.4);opacity:0}41%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes cf-wave-out{0%{transform:scale(1);opacity:1}34%{transform:scale(1.3);opacity:0}35%{transform:scale(.8);opacity:0}100%{transform:scale(1);opacity:1}}
+@media (prefers-reduced-motion:reduce){.cf-profile .cf-w{animation:none!important}}
+</style>
+<rect width="88" height="88" rx="44" fill="#101827"/>
+<path d="M58.0801 66.8801H54.5601V61.6001H47.5201C45.187 61.5975 42.9501 60.6696 41.3004 59.0198C39.6506 57.37 38.7227 55.1332 38.7201 52.8001V50.5485L34.6436 49.1898C34.3936 49.1064 34.1655 48.968 33.9761 48.7847C33.7868 48.6014 33.641 48.3779 33.5496 48.1308C33.4582 47.8836 33.4234 47.6191 33.4479 47.3567C33.4724 47.0943 33.5555 46.8407 33.6911 46.6148L38.7201 38.2324V33.4401C38.7248 29.2405 40.3951 25.2142 43.3647 22.2447C46.3342 19.2751 50.3605 17.6048 54.5601 17.6001H63.3601V21.1201H54.5601C51.2937 21.1237 48.1622 22.4229 45.8526 24.7326C43.5429 27.0422 42.2437 30.1737 42.2401 33.4401V38.7201C42.2401 39.0391 42.1533 39.352 41.9891 39.6254L37.838 46.5444L41.0366 47.6104C41.3871 47.7272 41.6919 47.9513 41.9079 48.251C42.1239 48.5507 42.2401 48.9107 42.2401 49.2801V52.8001C42.2416 54.2 42.7984 55.5421 43.7883 56.5319C44.7781 57.5218 46.1202 58.0786 47.5201 58.0801H56.3201C56.7869 58.0801 57.2345 58.2655 57.5646 58.5956C57.8947 58.9257 58.0801 59.3733 58.0801 59.8401V66.8801Z" fill="#FFFEF7"/>
+<path d="M52.8 35.2002H45.76V38.7202H52.8V35.2002Z" fill="#FFFEF7"/>
+<path class="cf-w cf-w1" d="M28.7453 58.4617C27.4538 57.306 26.4205 55.8908 25.7132 54.3086C25.0058 52.7264 24.6401 51.0128 24.6401 49.2797C24.6401 47.5465 25.0058 45.8329 25.7132 44.2507C26.4205 42.6685 27.4538 41.2533 28.7453 40.0977L31.0932 42.7201C30.1703 43.5455 29.432 44.5564 28.9265 45.6866C28.421 46.8169 28.1597 48.0411 28.1597 49.2793C28.1597 50.5175 28.421 51.7417 28.9265 52.872C29.432 54.0023 30.1703 55.0131 31.0932 55.8386L28.7453 58.4617Z" fill="#FFFEF7"/>
+<path class="cf-w cf-w2" d="M23.5831 64.7695C21.179 62.9658 19.2279 60.6272 17.884 57.939C16.5402 55.2507 15.8406 52.2865 15.8406 49.281C15.8406 46.2755 16.5402 43.3113 17.884 40.6231C19.2279 37.9348 21.179 35.5962 23.5831 33.7925L25.6961 36.6081C23.7287 38.0837 22.1318 39.9971 21.0319 42.1968C19.9321 44.3965 19.3595 46.822 19.3595 49.2814C19.3595 51.7407 19.9321 54.1662 21.0319 56.3659C22.1318 58.5656 23.7287 60.479 25.6961 61.9546L23.5831 64.7695Z" fill="#FFFEF7"/>
+</svg></a>
+<img class="cf-portrait" src="../footer-portrait.svg" alt="" width="68" height="90">
+</footer>
+</main>
+  </div>
+<div id="lb" data-native-scroll role="dialog" aria-modal="true" aria-label="Просмотр скриншота">
+  <img alt="">
+<button class="lb-x" type="button" aria-label="Закрыть"></button></div>
+<script>
+  // wrap an opening quote at the very start of a text block so it hangs into the margin
+  document.querySelectorAll('.text p, .text li, h1, h2, h3').forEach(function (el) {
+    var n = el.firstChild;
+    if (n && n.nodeType === 3 && /^[«„“"(]/.test(n.nodeValue)) {
+      var s = document.createElement('span'); s.className = 'hq'; s.textContent = n.nodeValue[0];
+      n.nodeValue = n.nodeValue.slice(1); el.insertBefore(s, n);
+    }
+  });
+</script>
+<script>
+(function () {
+  var AT_TOP = 2, HOVER_PAD = 10, TOUCH_STEP = 4;   // px
+  var pill = document.getElementById('pill'), slot = document.getElementById('pillSlot');
+  var hover = false, up = false, lastY = window.scrollY;
+  var scrollDir = window.matchMedia('(hover: none), (max-width: 552px)');   // телефонная раскладка: вниз — прячем, вверх — показываем
+  var dir = 0, anchor = window.scrollY;
+  function apply() { pill.classList.toggle('away', !(window.scrollY <= AT_TOP || hover || up)); }
+  window.addEventListener('scroll', function () {
+    var y = window.scrollY;
+    if (y !== lastY) hover = false;
+    if (scrollDir.matches) {                       // считаем пройденный путь от точки разворота, а не шаг между кадрами скролла
+      if (y > lastY) { if (dir <= 0) { dir = 1; anchor = lastY; } if (y - anchor > 6) up = false; }
+      else if (y < lastY) { if (dir >= 0) { dir = -1; anchor = lastY; } if (anchor - y > 14) up = true; }
+    }
+    lastY = y; apply();
+  }, { passive: true });
+  window.addEventListener('pointermove', function (e) {
+    if (e.pointerType === 'touch') return;
+    var r = slot.getBoundingClientRect();
+    hover = e.clientX >= r.left - HOVER_PAD && e.clientX <= r.right + HOVER_PAD &&
+            e.clientY >= 0 && e.clientY <= r.bottom + HOVER_PAD;
+    apply();
+  }, { passive: true });
+  document.documentElement.addEventListener('mouseleave', function () { hover = false; apply(); });
+  apply();
+})();
+</script>
+<script>
+(function () {
+  var TAU = 90, LINE_PX = 16, MAX_DT = 50, STOP_PX = .5;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var doc = document.documentElement, raf = 0, target = 0, cur = 0, last = 0;
+  function max() { return Math.max(0, doc.scrollHeight - window.innerHeight); }
+  function clamp(v) { return Math.max(0, Math.min(max(), v)); }
+  function loop(t) {
+    var dt = Math.min(MAX_DT, t - last) || 16; last = t;
+    cur += (target - cur) * (1 - Math.exp(-dt / TAU));
+    if (Math.abs(target - cur) < STOP_PX) { cur = target; window.scrollTo(0, cur); raf = 0; return; }
+    window.scrollTo(0, cur);
+    raf = requestAnimationFrame(loop);
+  }
+  // keyboard, scrollbar etc.: pick up the position when our animation is idle
+  window.addEventListener('scroll', function () { if (!raf) cur = target = window.scrollY; }, { passive: true });
+  window.addEventListener('wheel', function (e) {
+    if (e.ctrlKey || reduce.matches || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+    if (e.target.closest && e.target.closest('[data-native-scroll]')) return;
+    e.preventDefault();
+    var d = e.deltaY * (e.deltaMode === 1 ? LINE_PX : e.deltaMode === 2 ? window.innerHeight : 1);
+    if (!raf) cur = target = window.scrollY;
+    target = clamp(target + d);
+    if (!raf) { last = performance.now(); raf = requestAnimationFrame(loop); }
+  }, { passive: false });
+})();
+</script>
+<script>
+  (function () {
+    var lb = document.getElementById("lb"),
+        im = lb.querySelector("img");
+
+    function open(src, alt) {
+      im.src = src; im.alt = alt || "";
+      lb.classList.add("on");
+      document.body.classList.add("lock");
+    }
+    function close() {
+      lb.classList.remove("on");
+      document.body.classList.remove("lock");
+    }
+
+    document.querySelectorAll(".shot").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var i = b.querySelector("img");
+        open(i.currentSrc || i.src, i.alt);
+      });
+    });
+
+    lb.addEventListener("click", close);
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") close();
+    });
+  })();
+</script>
+<script src="../transition.js"></script>
+</body>
+</html>
