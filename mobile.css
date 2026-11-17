@@ -1,0 +1,59 @@
+/* Адаптив. Три режима по ширине экрана:
+   ≥ 708 px     десктоп: колонка 498 px по центру, портрет в левом поле;
+   553–707 px   колонка сужается (100% − 210 px, от 498 до 343), портрет остаётся в левом поле;
+   ≤ 552 px     телефон: портрет уходит в строку пилюли, колонка почти во всю ширину (отступы 16 px).
+   Карточки кейсов становятся компактными, когда колонка уже 440 px (контейнерный запрос). */
+:root{--col:min(498px, 100% - 210px)}                  /* ширина колонки контента главной: 498 px, а когда слева не хватает места под портрет — сужается (до 343 px) */
+@media (max-width:552px){:root{--col:min(498px, 100% - 32px)}}   /* телефон: портрет уходит в строку пилюли, колонка почти во всю ширину */
+.lb-x{display:none}
+html,body{overflow-x:clip}                                   /* страница не скроллится по горизонтали (кроме полос скриншотов) */
+
+/* «Тариф»: контент 628 px, боковые отступы 16 px (пилюля = ширина контента) */
+body[data-tr="case"] .page{max-width:calc(var(--content,628px) + 32px);padding-left:16px;padding-right:16px}
+
+/* карточки кейсов на главной: когда колонка уже 440 px */
+@container page (max-width: 439.98px){
+  .row{gap:12px}
+  .meta{font-size:15px;gap:6px;line-height:19px}             /* 3 строки по 19 + 2 зазора по 6 = 69 px */
+  .lf{width:var(--lf,69px);height:var(--lf,69px)}            /* квадрат ровно по высоте блока с текстом (--lf выставляет скрипт на главной) */
+  .lf img{width:calc(var(--lf,69px) * .64);height:calc(var(--lf,69px) * .64)}
+  .lf-c{width:12px;height:12px}
+  @media (hover:hover){ .case:hover .lf .lf-c{width:18px;height:18px} }   /* уголки при наведении растут меньше, чем на десктопе (там 17→26) */
+
+  /* абзац «Опыт…»: на узкой колонке другие переносы (строки: «Опыт в создании data-dense/ | enterprise сервисов, процессов | и менторстве молодых дизайнеров. | Ценю ясность и последовательность | как в дизайне, так и в коммуникации.») */
+  .bio br.d{display:none}
+  .bio br.m{display:revert}
+}
+
+/* телефон */
+@media (max-width:552px){
+  /* пилюля: 44 px (кнопки 40 px), одинаково на всех страницах */
+  .pill,.pill-slot{top:calc(12px + env(safe-area-inset-top,0px))}
+  .pill-slot{height:44px}
+  .pill{padding:1px}
+  .pb{width:40px;height:40px}
+  .pb img{width:22px;height:22px}
+  .mini{width:25px;height:33px}
+
+  /* главная: портрет + пилюля вместе ровно по ширине колонки контента, пилюля справа от портрета (39 + 8 px) */
+  body[data-tr="home"][data-pill] .pill,
+  body[data-tr="home"][data-pill] .pill-slot{left:calc(50% - var(--col) / 2 + 47px);transform:none;width:calc(var(--col) - 47px)}
+
+  /* портрет на уровне пилюли: всегда виден, под ним светлая подложка, чтобы текст не смешивался с линиями */
+  .portrait{display:block;left:calc(50% - var(--col) / 2);top:calc(12px + env(safe-area-inset-top,0px));width:39px;height:44px;z-index:12;
+    background:var(--bg);border-radius:10px;box-shadow:0 0 0 4px var(--bg)}
+  .portrait.is-gone{background:transparent;box-shadow:none}
+
+  /* футер: отступы 56 px */
+  .cf-row{gap:56px}
+  body[data-tr="home"] .page{padding-bottom:56px}
+  body:not([data-tr="home"]) .cf-row{margin-top:8px}          /* 48 (шаг блоков) + 8 = 56 */
+  body[data-tr="case"] main{margin-bottom:56px}
+  body[data-tr="case"] .page{padding-bottom:56px}
+}
+
+/* увеличенная картинка: на телефоне и на тач-устройствах курсора-креста нет, поэтому видимая кнопка закрытия 44×44 */
+@media (max-width:552px),(hover:none){
+  .lb-x{display:block;position:absolute;top:calc(12px + env(safe-area-inset-top,0px));right:12px;width:44px;height:44px;padding:0;border:0;
+    background:url("cursors/src/close.svg") center/30px 30px no-repeat;z-index:2}
+}

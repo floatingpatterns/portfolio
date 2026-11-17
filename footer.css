@@ -1,0 +1,6 @@
+/* Футер кейсов: кнопка Telegram и портрет, как внизу главной (отступы 80 px). */
+.cf-row{display:flex;flex-direction:column;align-items:center;gap:80px;margin-top:32px}   /* 48 px (шаг между блоками) + 32 = 80 px */
+.cf{display:block;width:72px;height:72px;flex:none}   /* по весу «чернил» близко к портрету 68×90 */
+.cf svg{display:block;width:100%;height:100%}
+.cf:focus-visible{outline:2px solid var(--link,#101827);outline-offset:4px;border-radius:50%}
+.cf-portrait{display:block;width:68px;height:90px;flex:none}

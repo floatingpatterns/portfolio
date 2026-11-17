@@ -1,0 +1,6 @@
+/* Курсоры: стиль «полосы» (полоса 2 / зазор 2 физ. пикселя = 1px/1px на обычных экранах), светлая подложка. Подключается на всех страницах.
+   Исходники в cursors/src/*.svg; PNG 1x/2x сделаны из них. */
+html,body{cursor:url("cursors/arrow.png") 0 0,auto;cursor:-webkit-image-set(url("cursors/arrow.png") 1x,url("cursors/arrow@2x.png") 2x) 0 0,auto;cursor:image-set(url("cursors/arrow.png") 1x,url("cursors/arrow@2x.png") 2x) 0 0,auto}
+a[href],button,[role="button"],summary,label[for],select,input[type="checkbox"],input[type="radio"],input[type="range"],.tg,.shot{cursor:url("cursors/pointer.png") 10 1,pointer;cursor:-webkit-image-set(url("cursors/pointer.png") 1x,url("cursors/pointer@2x.png") 2x) 10 1,pointer;cursor:image-set(url("cursors/pointer.png") 1x,url("cursors/pointer@2x.png") 2x) 10 1,pointer}
+#lb,#lb *{cursor:url("cursors/close.png") 15 15,zoom-out;cursor:-webkit-image-set(url("cursors/close.png") 1x,url("cursors/close@2x.png") 2x) 15 15,zoom-out;cursor:image-set(url("cursors/close.png") 1x,url("cursors/close@2x.png") 2x) 15 15,zoom-out}
+html.tr-out,html.tr-out *,html.tr-enter,html.tr-enter *{cursor:url("cursors/wait.png") 11 22,wait !important;cursor:-webkit-image-set(url("cursors/wait.png") 1x,url("cursors/wait@2x.png") 2x) 11 22,wait !important;cursor:image-set(url("cursors/wait.png") 1x,url("cursors/wait@2x.png") 2x) 11 22,wait !important}
